@@ -7,13 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
   create_at DateTime @default(now())
+  Post      Post[]
 
   @@map("users")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @db.Text
+  published Boolean  @default(false)
+  author    User     @relation(fields: [author_id], references: [id])
+  author_id Int
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
+
+  @@map("posts")
 }
